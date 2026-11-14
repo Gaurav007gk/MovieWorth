@@ -1,0 +1,2 @@
+package com.movieworth.api.boxoffice;import org.springframework.web.bind.annotation.*;import java.time.LocalDate;import java.util.*;
+@RestController @RequestMapping("/api/box-office")public class BoxOfficeController{private final CollectionRepository repo;public BoxOfficeController(CollectionRepository r){repo=r;}@GetMapping("/today")public List<CollectionSnapshot> today(){return repo.findByCollectionDateOrderByWorldwideGrossCrDesc(LocalDate.now());}@GetMapping("/top")public List<CollectionSnapshot> top(){return repo.latestTop();}}
