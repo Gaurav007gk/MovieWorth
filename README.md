@@ -1,20 +1,28 @@
-# MovieWorth 🎬
+# MovieWorth
 
-Responsive movie box-office dashboard with search, language filters, sortable collections, upcoming releases and movie detail/day-wise chart.
+Static GitHub Pages frontend + Spring Boot/PostgreSQL backend.
 
-## Data disclaimer
-All included amounts and release entries are **illustrative demo data**, not live or verified Sacnilk figures. This repository does not scrape Sacnilk. For exact Sacnilk data and hourly updates, obtain written permission and a licensed API/data feed first.
+## Run backend
+1. Install Docker Desktop.
+2. Copy `backend/.env.example` to `backend/.env`; set your TMDB API key from https://www.themoviedb.org/settings/api.
+3. `cd backend && docker compose --env-file .env up --build`
+4. Health: http://localhost:8080/actuator/health
+5. Import TMDB movies: `POST http://localhost:8080/api/movies/sync/tmdb` (curl/Postman).
 
-## Run locally
-`python -m http.server 8080` then open http://localhost:8080.
+## REST API
+- `GET /api/movies` popular movies
+- `GET /api/movies/{id}` details
+- `GET /api/movies/trending`
+- `GET /api/movies/search?q=...`
+- `GET /api/movies/{id}/collections` history
+- `GET /api/box-office/today`
+- `GET /api/box-office/top` latest ranking
+- `POST /api/movies/sync/tmdb`
 
-## GitHub Pages
-Repository Settings → Pages → Deploy from branch → `main` → `/(root)
+## Hourly licensed box-office feed
+Scheduler runs hourly; configure `BOX_OFFICE_SOURCE_ENABLED=true`, `BOX_OFFICE_FEED_URL`, `BOX_OFFICE_FEED_TOKEN` for an authorized JSON endpoint. Expected array: `[{"tmdbId":123,"date":"2026-11-14","indiaNetCr":12.5,"indiaGrossCr":14.8,"overseasCr":3.2,"worldwideCr":18,"sourceUrl":"https://provider.example/report/123"}]`.
 
-## Production roadmap
-- Spring Boot REST API + PostgreSQL
-- Licensed hourly data importer and source timestamp/revision audit
-- APIs: `GET /api/movies`, `GET /api/movies/{slug}`, `GET /api/movies/{slug}/collections`, `GET /api/advance-booking`
-- Keep provider credentials on the server, never in browser JavaScript.
+**Sacnilk:** no unofficial scraping included. Obtain permission/documented feed access first; don't scrape pages or bypass access controls.
 
-MIT license applies to starter code only; third-party movie data/posters are excluded.
+## Deploy frontend/backend
+GitHub Pages cannot run Java. Deploy API + PostgreSQL on a Java-capable host, set `window.MOVIEWORTH_API_BASE` to deployed API URL ending `/api` before `app.js`, and configure CORS to `https://gaurav007gk.github.io`. Never expose API/feed secrets in frontend JS.
