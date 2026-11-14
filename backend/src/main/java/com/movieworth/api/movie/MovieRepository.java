@@ -1,0 +1,2 @@
+package com.movieworth.api.movie;import org.springframework.data.jpa.repository.JpaRepository;import org.springframework.data.jpa.repository.Query;import org.springframework.data.repository.query.Param;import java.util.*;
+public interface MovieRepository extends JpaRepository<Movie,Long>{Optional<Movie> findByTmdbId(Long tmdbId);List<Movie> findTop30ByOrderByPopularityDesc();@Query("select m from Movie m where lower(m.title) like lower(concat('%',:q,'%')) order by m.popularity desc")List<Movie> search(@Param("q")String q);}
