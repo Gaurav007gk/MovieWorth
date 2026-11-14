@@ -1,0 +1,2 @@
+package com.movieworth.api.common;import org.springframework.web.bind.annotation.*;import org.springframework.http.*;import java.util.*;
+@RestControllerAdvice public class ApiExceptionHandler{@ExceptionHandler(NoSuchElementException.class)ResponseEntity<?> missing(Exception e){return ResponseEntity.status(404).body(Map.of("error",e.getMessage()));}@ExceptionHandler(IllegalStateException.class)ResponseEntity<?> config(Exception e){return ResponseEntity.status(503).body(Map.of("error",e.getMessage()));}}
